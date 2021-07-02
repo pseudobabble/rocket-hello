@@ -1,0 +1,36 @@
+#[macro_use]
+extern crate rocket;
+
+use rocket::response::content::Json;
+use serde::{Deserialize};
+
+
+#[derive(Deserialize)]
+struct Task<'r> {
+    name: &'r str,
+    description: &'r str,
+    complete: bool
+}
+
+#[get("/")]
+fn index() -> Json<&'static str> {
+    Json("{\"status\": \"success\", \"message\": \"Hello World\"}")
+}
+
+#[get("/test/<test_item>")]
+fn test(test_item: &str) -> String {
+    format!("{{\"status\": \"success\", \"message\": \"Test {} Success\"}}", test_item)
+}
+
+// #[post("/post")]
+// fn post(name: &str) -> Json<&'static str> {
+
+//     Json("{\"status\": \"success\", \"message\": \"Test Success\"}")
+// }
+
+#[launch]
+fn rocket() -> _ {
+    rocket::build()
+        .mount("/", routes![index, test])
+
+}
